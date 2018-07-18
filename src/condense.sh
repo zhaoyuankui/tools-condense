@@ -5,7 +5,7 @@ source $MYSHELLIB/echoc.sh;
 
 # If the parent directory of the conterpart of a compress file that not modified
 # more than $MIN_UNCHANGED_TIME, then the conterpart would be removed.
-declare -i MIN_UNCHANGED_TIME=$((30 * 24 * 3600));
+declare -i MIN_UNCHANGED_TIME=$((15 * 24 * 3600));
 declare -i now_time=`date +%s`;
 declare -i yes_all=0;
 declare -A should_remove;
@@ -38,8 +38,7 @@ function check() {
         return;
     fi;
     declare parent_dir="`dirname "$conterpart"`";
-    # To do. Modify time would be changed if a file removed.
-    
+    # Add to should_remove list. Modify time would be changed if a file removed.
     if [ ! "${should_remove[$parent_dir]}" ]; then
         declare -i modify_time=`stat -s "$parent_dir" | grep -o 'st_mtime=[0-9]*' | awk -F= '{print $NF}'`;
         declare -i elapsed_time=$((now_time - modify_time));
